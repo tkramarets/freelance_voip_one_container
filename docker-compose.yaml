@@ -1,0 +1,20 @@
+version: '3'
+services:
+  asterisk:
+    container_name: asterisk
+    network_mode: bridge
+    cap_add:
+      - ALL
+    image: tarasnix/aster_freelance
+    restart: unless-stopped
+    ports:
+      - "5060:5060/udp"
+      - "10000-10200/udp"
+      - "80:80/tcp"
+    volumes:
+      - ./supervisor.d:/etc/supervisor/conf.d/
+      - ./asterisk/:/etc/asterisk/
+      - ./www:/var/www/
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./php-fpm.d:/etc/php-fpm.d
+      - ./php.ini:/etc/php.ini
