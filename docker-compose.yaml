@@ -1,20 +1,48 @@
-version: '3'
+version: '2.1'
 services:
   asterisk:
+    depends_on:
+      mysql:
+        condition: service_healthy
     container_name: asterisk
     network_mode: bridge
     cap_add:
       - ALL
-    image: tarasnix/aster_freelance
+    image: tarasnix/aster_freelance:latest
+    build: .
     restart: unless-stopped
     ports:
       - "5060:5060/udp"
-      - "10000-10200/udp"
-      - "80:80/tcp"
+      - "10000-10100:10000-10100/udp"
+      - "8099:80/tcp"
     volumes:
       - ./supervisor.d:/etc/supervisor/conf.d/
       - ./asterisk/:/etc/asterisk/
       - ./www:/var/www/
       - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./nginx.conf:/etc/nginx/nginx.conf
       - ./php-fpm.d:/etc/php-fpm.d
       - ./php.ini:/etc/php.ini
+    links:
+      - mysql
+
+
+  mysql:
+    container_name: mysql
+    image: mysql:8.0
+    restart: unless-stopped
+    network_mode: bridge
+    environment:
+      - MYSQL_DATABASE=asterisk
+      - MYSQL_ROOT_PASSWORD=your_root_password
+      - MYSQL_USER=asterisk
+      - MYSQL_PASSWORD=PaSSw0rd1JdKq
+    ports:
+      - "3306:3306/tcp"
+    volumes:
+      - ./mysql:/var/lib/mysql
+    command: '--default-authentication-plugin=mysql_native_password'
+    healthcheck:
+        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+        timeout: 30s
+        retries: 10
