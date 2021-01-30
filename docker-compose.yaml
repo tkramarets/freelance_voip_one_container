@@ -9,7 +9,6 @@ services:
     cap_add:
       - ALL
     image: tarasnix/aster_freelance:latest
-    build: .
     restart: unless-stopped
     ports:
       - "5060:5060/udp"
