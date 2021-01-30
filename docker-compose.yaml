@@ -14,8 +14,9 @@ services:
     ports:
       - "5060:5060/udp"
       - "10000-10200:10000-10200/udp"
-      - "8098:80/tcp"
+      - "80:80/tcp"
     volumes:
+      - ./php-fpm.conf:/etc/php-fpm.conf
       - ./supervisor.conf:/etc/supervisor.conf
       - ./supervisor.d:/etc/supervisor/conf.d/
       - ./asterisk/:/etc/asterisk/
@@ -45,7 +46,7 @@ services:
       - MYSQL_USER=asterisk
       - MYSQL_PASSWORD=PaSSw0rd1JdKq
     ports:
-      - "3307:3306/tcp"
+      - "3306:3306/tcp"
     volumes:
       - ./mysql:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
