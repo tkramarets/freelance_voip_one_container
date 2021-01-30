@@ -1,0 +1,15 @@
+[DEFAULT]
+ignoreip = 172.12.0.0/12
+bantime  = 604800
+findtime  = 86400
+maxretry = 3
+logpath  = /var/log/asterisk/security
+banaction = iptables-multiport
+banaction_allports = iptables-allports
+
+[asterisk-iptables]
+enabled = true
+port = 5060,5061
+filter  = asterisk
+action  = iptables-allports[name=ASTERISK, protocol=all]
+logpath  = /var/log/asterisk/messages

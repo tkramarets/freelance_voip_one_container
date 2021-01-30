@@ -14,11 +14,18 @@ services:
     ports:
       - "5060:5060/udp"
       - "10000-10200:10000-10200/udp"
-      - "80:80/tcp"
+      - "8098:80/tcp"
     volumes:
+      - ./supervisor.conf:/etc/supervisor.conf
       - ./supervisor.d:/etc/supervisor/conf.d/
       - ./asterisk/:/etc/asterisk/
+      - ./sounds/:/var/lib/asterisk/sounds
+      - ./keys:/var/lib/asterisk/keys
+      - ./phoneprov:/var/lib/asterisk/phoneprov
+      - ./spool/:/var/spool/asterisk
+      - ./log:/var/log/asterisk
       - ./www:/var/www/
+      - ./fail2ban:/etc/fail2ban/
       - ./nginx/conf.d/:/etc/nginx/conf.d
       - ./nginx.conf:/etc/nginx/nginx.conf
       - ./php-fpm.d:/etc/php-fpm.d
@@ -38,7 +45,7 @@ services:
       - MYSQL_USER=asterisk
       - MYSQL_PASSWORD=PaSSw0rd1JdKq
     ports:
-      - "3306:3306/tcp"
+      - "3307:3306/tcp"
     volumes:
       - ./mysql:/var/lib/mysql
     command: '--default-authentication-plugin=mysql_native_password'
